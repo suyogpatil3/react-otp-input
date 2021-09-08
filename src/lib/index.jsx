@@ -249,42 +249,44 @@ class OtpInput extends Component {
   };
 
   // The content may not have changed, but some input took place hence change the focus
-
   handleOnInput = (e) => {
-    if (!e.target.value) return
+    if (!e.target.value) return;
     if (e.target.value && e.target.value.length > 1) {
-      // this code happens when the users click the 'from your messages' code  at the
-      //  top of the keyboard. Essentially the mobile OS's act as though someone has pressed
-      // all of the OTP numbers all at once rather than using a 'paste' style.
-      e.preventDefault()
-      const { numInputs } = this.props
-      const { activeInput } = this.state
-      const otp = this.getOtpValue()
+      // this code happens when the users click the 'from your messages' code at the top of the keyboard
+      // essentially the mobile OS's act as though someone has pressed all of the OTP numbers all at once
+      // rather than using a 'paste' style.
+      e.preventDefault();
+      const { numInputs } = this.props;
+      const { activeInput } = this.state;
+      const otp = this.getOtpValue();
 
       // Get pastedData in an array of max size (num of inputs - current position)
-      const pastedData = e.target.value.slice(0, numInputs - activeInput).split('')
+      const pastedData = e.target.value.slice(0, numInputs - activeInput).split('');
       // Paste data from focused input onwards
       for (let pos = 0; pos < numInputs; ++pos) {
         if (pos >= activeInput && pastedData.length > 0) {
-          otp[pos] = pastedData.shift()
+          otp[pos] = pastedData.shift();
         }
       }
-      this.handleOtpChange(otp)
-      this.focusInput(this.props.numInputs)
+      this.handleOtpChange(otp);
+      this.focusInput(this.props.numInputs);
     } else if (this.isInputValueValid(e.target.value)) {
-      this.focusNextInput()
+      this.focusNextInput();
     } else {
-      // Workaround for dealing with keyCode "229 Unidentified" on Android.
+      // This is a workaround for dealing with keyCode "229 Unidentified" on Android.
+
       if (!this.props.isInputNum) {
-        const { nativeEvent } = e
+        const { nativeEvent } = e;
+
         if (nativeEvent.data === null && nativeEvent.inputType === 'deleteContentBackward') {
-          e.preventDefault()
-          this.changeCodeAtFocus('')
-          this.focusPrevInput()
+          e.preventDefault();
+          this.changeCodeAtFocus('');
+          this.focusPrevInput();
         }
       }
     }
   };
+
   renderInputs = () => {
     const { activeInput } = this.state;
     const {
